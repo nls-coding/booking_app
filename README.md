@@ -5,10 +5,49 @@
 ユーザー（`users`）が、予約サイト（`booking_spots`）に紐づくプラン（`plans`）を選び、日時を指定して予約（`reservations`）できます。  
 **CRUD + API 設計 + 重複予約防止** を最小構成で実装しました。
 
-## フロントエンド立ち上げ画面
+## 技術スタック
+- Backend: Flask + SQLAlchemy + SQLite（ポート `8000`）
+- Frontend: React + Vite（ポート `5173`）
+- 時刻: サーバ保存は UTC（`Z` 付き ISO）。表示はブラウザ依存。
 
+### 現状できること
+**フロント**で予約作成／当日一覧を表示。  
+**マスタ**（ユーザー／スポット／プラン）は現状 API で作成します。
+- 予約スポットの登録／取得（API）
+- ユーザーの登録／取得（API）
+- プランの登録／取得（API）
+- 予約の作成／一覧／取得／更新／削除（API）
+- 予約作成フォーム（フロント）
+- 当日予約の簡易一覧（フロント）
+- 予約の重複チェック（同一プラン上の時間帯重複は 409）
 
+### 今後の展望（未対応分）
+- マスタ管理UI（ユーザー／スポット／プランの画面）
+- 週／月カレンダー表示（react-big-calendar など）
+- 認証（ログイン／JWT）
+- 入力バリデーションの強化（フロント）
+- Docker / デプロイ手順
 
+## 立ち上げ画面
+![予約登録画面](projects/booking_app/images/reservation1.png)
+
+### バックエンド起動
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate            # Windows: .\.venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+python -m app.seed                   # 初期データ投入（任意）
+FLASK_APP=app.app FLASK_RUN_PORT=8000 flask run
+# -> http://127.0.0.1:8000/api/health が { "ok": true } ならOK
+```
+### フロントエンド起動
+```bash
+cd frontend/booking-frontend
+npm install
+npm run dev
+# -> http://localhost:5173
+```
 ---
 
 ## エンティティと関係
